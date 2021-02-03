@@ -13,44 +13,53 @@ abstract class Endpoint extends Db implements View{
   public $data;
 
   public function query($sql){
-    // DB::conn as mysqli connect object
+    // set property $res to mysqli response object
     $this->res = $this->conn->query($sql);
-    return $this->res;
-  }
 
-  public function prepared_query($sql, $params, $types = ""){
-    //either use set $types or default to prepared string type "s" per $param size
-    $types = $types ?: str_repeat("s", count($params));
-    //set $res property to mysqli prepared object
-    $this->res = $this->conn->prepare($sql);
-    //bind to nysqli prepared object
-    $this->res->bind_param($types, ...$params);
-    //execute msqli bound prepared object
-    $this->res->execute();
     //return mysqli response object
     return $this->res;
   }
 
-  function prepared_select($sql, $params = [], $types = ""){
-    //return mysqli response object from prepared_query method
+  public function prepared_query($sql, $params, $types = ""){
+    //either use set parameter $types or default to prepared string type "s" per parameter $param size
+    $types = $types ?: str_repeat("s", count($params));
+
+    //set property $res to mysqli prepared object
+    $this->res = $this->conn->prepare($sql);
+    //bind to mysqli prepared object
+    //E.G. - bind_param("sib", ["String", 153, True]);
+    $this->res->bind_param($types, ...$params);
+    //execute bound mysqli prepared object
+    $this->res->execute();
+
+    //return executed mysqli prepared object
+    return $this->res;
+  }
+
+  protected function prepared_select($sql, $params = [], $types = ""){
+    //return mysqli response object
     return $this->prepared_query($sql, $params, $types)->get_result();
   }
 
 }
 
 class Dbh extends Endpoint {
-  //mysqli prepared statement
+  //sql prepared SELECT statement
   private $sql = "SELECT * FROM user_accounts WHERE login_id=? AND login_name=?";
-  //mysqli query statement
+  //sql query SELECT statement
   private $sql2 = "SELECT * FROM user_accounts";
 
   public function __construct(){
     //set property $conn to returned mysqli object through Db::connect() call
     $this->conn = $this->connect();
-    //query and prepared statement syntax
+
     //set property $res to mysqli response object
-    $this->res = $this->query($this->sql2);
-    //$this->res = $this->prepared_select($this->sql, [2, 'Owner'], "is");
+    //SYNTAX: query proxy method
+    //$this->res = $this->query($this->sql2);
+
+    //SYNTAX: prepared statement proxy method
+    $this->res = $this->prepared_select($this->sql, [2, 'Owner'], "is");
+
     //set public $data property to mysqli response object
     $this->data = $this->res;
     //close the connection
