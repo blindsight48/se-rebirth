@@ -23,9 +23,9 @@ abstract class DB implements Model {
     return $this->conn;
   }
 
-  protected function query(){
+  protected function query($sql){
     //set property $res to a mysqli->query result (to be changed)
-    $this->res = $this->conn->query("SELECT * FROM se_games");
+    $this->res = $this->conn->query($sql);
     //set property $data to associative array of property $res
     $this->data = $this->res->fetch_assoc();
     //pass the associative array
