@@ -48,10 +48,10 @@ class Dbh extends Endpoint {
     //set property $conn to returned mysqli object through Db::connect() call
     $this->conn = $this->connect();
     //query and prepared statement syntax
-    //set $res property to mysqli response object
+    //set property $res to mysqli response object
     $this->res = $this->query($this->sql2);
     //$this->res = $this->prepared_select($this->sql, [2, 'Owner'], "is");
-    //set public data property to mysqli response object
+    //set public $data property to mysqli response object
     $this->data = $this->res;
     //close the connection
     $this->conn->close();
