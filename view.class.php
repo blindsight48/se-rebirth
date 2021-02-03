@@ -2,7 +2,7 @@
 include_once 'model.class.php';
 
 class Dbh extends Db {
-  private $sql = "SELECT * FROM se_games";
+  private $sql = "SELECT * FROM user_accounts";
 
   public function __construct(){
     //set property $conn to returned mysqli object through Db::connect() call
@@ -17,4 +17,6 @@ class Dbh extends Db {
 //create new Dbh object
 $Dbh = new Dbh();
 //show results of the array element with key 'game_id'
-echo $Dbh->data['game_id'];
+foreach($Dbh->data as $key => $val){
+  echo $key . ": " . $val . "<br>";
+}
