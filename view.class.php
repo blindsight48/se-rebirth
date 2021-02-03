@@ -2,17 +2,14 @@
 include_once 'model.class.php';
 
 interface View {
-	public function query($sql);
-  public function prepared_query($sql, $params, $types);
+	public function close();
 }
 
 abstract class Endpoint extends Db implements View{
   // mysqli response object
   private $res;
-  // public access property
-  public $data;
 
-  public function query($sql){
+  protected function query($sql){
     // set property $res to mysqli response object
     $this->res = $this->conn->query($sql);
 
@@ -20,7 +17,7 @@ abstract class Endpoint extends Db implements View{
     return $this->res;
   }
 
-  public function prepared_query($sql, $params, $types = ""){
+  protected function prepared_query($sql, $params, $types = ""){
     //either use set parameter $types or default to prepared string type "s" per parameter $param size
     $types = $types ?: str_repeat("s", count($params));
 
@@ -41,9 +38,15 @@ abstract class Endpoint extends Db implements View{
     return $this->prepared_query($sql, $params, $types)->get_result();
   }
 
+  public function close(){
+    $this->conn->close();
+  }
+
 }
 
 class Dbh extends Endpoint {
+  // public access property
+  public $data;
   //sql prepared SELECT statement
   private $sql = "SELECT * FROM user_accounts WHERE login_id=? AND login_name=?";
   //sql query SELECT statement
@@ -54,6 +57,7 @@ class Dbh extends Endpoint {
     $this->conn = $this->connect();
 
     //set property $res to mysqli response object
+
     //SYNTAX: query proxy method
     //$this->res = $this->query($this->sql2);
 
@@ -63,7 +67,7 @@ class Dbh extends Endpoint {
     //set public $data property to mysqli response object
     $this->data = $this->res;
     //close the connection
-    $this->conn->close();
+    $this->close();
   }
 
 }
