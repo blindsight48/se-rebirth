@@ -16,7 +16,7 @@ class Dbh extends Db {
 
 //create new Dbh object
 $Dbh = new Dbh();
-//show results of the array element with key 'game_id'
+//show results of the associative array
 foreach($Dbh->data as $key => $val){
   echo $key . ": " . $val . "<br>";
 }
