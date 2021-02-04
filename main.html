@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="UTF-8" />
+		<title>RWD Testing</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#3367D6" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+		<link rel="icon" type="image/png" sizes="192x192" href="/img/sm-icon.png" />
+		<link rel="icon" type="image/png" sizes="512x512" href="/img/lg-icon.png" />
+		<link rel="apple-touch-icon" href="/img/sm-icon.png" />
+		<link rel="preload" href="img/bg-galaxy.jpg" as="image" />
+		<link rel="stylesheet" href="main.css" />
+	</head>
+	<body>
+		<script>
+			if ('serviceWorker' in navigator) {
+					window.addEventListener('load', () => {
+							navigator.serviceWorker.register('/sw.js', {scope: '/'})
+							.catch((err) => { console.log('Failed: ', err); });
+					});
+			}
+
+			window.addEventListener('DOMContentLoaded', () => {
+				document.documentElement.style.background = "url('img/bg-galaxy.jpg') no-repeat center center fixed";
+				document.documentElement.style.backgroundSize = "cover";
+			});
+		</script>
+		<section class="body">
+			<div class="grid">
+				<div class="c-1">
+					<p>Stuff</p>
+				</div>
+				<div class="c-2">
+					<p>Other Stuff</p>
+				</div>
+				<div class="c-3">
+					<p>More</p>
+				</div>
+				<div class="c-4">
+					<p>Even More</p>
+				</div>
+			</div>
+		</section>
+	</body>
+</html>
