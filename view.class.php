@@ -8,6 +8,8 @@ interface View {
 abstract class Endpoint extends Db implements View{
   // mysqli response object
   private $res;
+  // public access property
+  public $data;
 
   protected function query($sql){
     // set property $res to mysqli response object
@@ -38,6 +40,21 @@ abstract class Endpoint extends Db implements View{
     return $this->prepared_query($sql, $params, $types)->get_result();
   }
 
+  protected function format(){
+    if($this->res->num_rows > 0){
+      //create multi-dimensional array
+      $arr = array();
+      while($data = $this->res->fetch_assoc()){
+        $arr[] = $data;
+      }
+      //set property $data to multi-dimensional array
+      $this->data = $arr;
+
+      //return multi-dimensional array
+      return $this->data;
+    }
+  }
+
   public function close(){
     $this->conn->close();
   }
@@ -45,8 +62,6 @@ abstract class Endpoint extends Db implements View{
 }
 
 class Dbh extends Endpoint {
-  // public access property
-  public $data;
   //sql query SELECT statement
   private $sql = "SELECT * FROM user_accounts";
   //sql prepared SELECT statement
@@ -64,8 +79,8 @@ class Dbh extends Endpoint {
     //SYNTAX: prepared statement proxy method
     $this->res = $this->prepared_select($this->sql2, [1, 'Admin'], "is");
 
-    //set public $data property to mysqli response object
-    $this->data = $this->res;
+    //set public $data property to either associative array or multi-dimension if mysqli result num_rows == 1
+    $this->data = $this->res->num_rows == 1 ? $this->res->fetch_assoc() : $this->format();
     //close the connection
     $this->close();
   }
@@ -75,13 +90,26 @@ class Dbh extends Endpoint {
 //create new Dbh object
 $Dbh = new Dbh();
 
-if($Dbh->data->num_rows > 0){
-  //iterate over mysqli response object
-  for($i=0; $i<$Dbh->data->num_rows; $i++){
-    //show results of the associative array
-    foreach($Dbh->data->fetch_assoc() as $key => $val){
-      echo $key . ": " . $val . "<br>";
-    }
-    echo "<br>";
-  }
+//return a single row from a table
+//associative array Dbh::prepare_select($sql, $keys = [], $vals = "")
+//echo $Dbh->data['login_id'];
+
+foreach($Dbh->data as $key => $val){
+  echo $key . ": " . $val . "<br>";
 }
+
+
+//return entire table
+//multi-dimensional array Dbh::query($sql)
+//echo $Dbh->data[0]['login_name'];
+
+//iterate over each index of multi-dimensional array
+/*
+for($i=0; $i<count($Dbh->data); $i++){
+  //$Dbh->data[$i][...]
+  foreach($Dbh->data[$i] as $key => $val){
+    echo $key . ": " . $val . "<br>";
+  }
+  echo "<br>";
+}
+*/
