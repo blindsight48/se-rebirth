@@ -47,10 +47,10 @@ abstract class Endpoint extends Db implements View{
 class Dbh extends Endpoint {
   // public access property
   public $data;
-  //sql prepared SELECT statement
-  private $sql = "SELECT * FROM user_accounts WHERE login_id=? AND login_name=?";
   //sql query SELECT statement
-  private $sql2 = "SELECT * FROM user_accounts";
+  private $sql = "SELECT * FROM user_accounts";
+  //sql prepared SELECT statement
+  private $sql2 = "SELECT * FROM user_accounts WHERE login_id=? AND login_name=?";
 
   public function __construct(){
     //set property $conn to returned mysqli object through Db::connect() call
@@ -59,10 +59,10 @@ class Dbh extends Endpoint {
     //set property $res to mysqli response object
 
     //SYNTAX: query proxy method
-    //$this->res = $this->query($this->sql2);
+    //$this->res = $this->query($this->sql);
 
     //SYNTAX: prepared statement proxy method
-    $this->res = $this->prepared_select($this->sql, [2, 'Owner'], "is");
+    $this->res = $this->prepared_select($this->sql2, [1, 'Admin'], "is");
 
     //set public $data property to mysqli response object
     $this->data = $this->res;
