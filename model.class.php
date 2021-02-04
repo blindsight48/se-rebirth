@@ -1,4 +1,5 @@
 <?php
+include_once '../includes/config.inc.php';
 
 interface Model {
 	public function connect();
@@ -7,13 +8,13 @@ interface Model {
 abstract class DB implements Model {
 
   // Set you database credentials here
-	const HOST = "localhost";
-	const USER = "root";
-	const PASS = "password";
-	const DB = "v-0.1alpha";
+	const HOST = HOST;
+	const USER = USER;
+	const PASS = PASS;
+	const DB = DB;
 
   //name of game (to be created)
-  const SERVER = "test";
+  const SERVER = SERVER;
 
   //properties
   private $conn;
