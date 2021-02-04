@@ -91,7 +91,7 @@ class Dbh extends Endpoint {
 $Dbh = new Dbh();
 
 //return a single row from a table
-//associative array Dbh::prepare_select($sql, $keys = [], $vals = "")
+//associative array Dbh::prepare_select($sql, $params = [], $types = "")
 //echo $Dbh->data['login_id'];
 
 foreach($Dbh->data as $key => $val){
